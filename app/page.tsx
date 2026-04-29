@@ -1,101 +1,127 @@
-import Image from "next/image";
+import Link from 'next/link'
+
+const tools = [
+  {
+    href: '/image-converter',
+    icon: '🖼',
+    label: 'Image Converter',
+    description: 'Convert, compress & resize images. Supports PNG, JPG, WebP, AVIF. Batch download as ZIP.',
+    status: 'live',
+    color: '#E85D20',
+  },
+  {
+    href: '/color-palette',
+    icon: '🎨',
+    label: 'Color Palette',
+    description: 'Extract dominant colors from any image. Get HEX, RGB & HSL values. Export as PNG or JSON.',
+    status: 'live',
+    color: '#9B59B6',
+  },
+  {
+    href: '/qr-generator',
+    icon: '▣',
+    label: 'QR Generator',
+    description: 'Generate QR codes for URLs, text, WiFi, email & phone. Custom colors, live preview, batch mode.',
+    status: 'live',
+    color: '#27AE60',
+  },
+  {
+    href: '/pdf-toolkit',
+    icon: '📄',
+    label: 'PDF Toolkit',
+    description: 'Merge, split, compress and reorder PDF pages. Drag & drop page sorting.',
+    status: 'soon',
+    color: '#E74C3C',
+  },
+  {
+    href: '/pdf-to-images',
+    icon: '📑',
+    label: 'PDF → Images',
+    description: 'Convert each PDF page to PNG or JPG. Choose 72, 150, or 300 DPI. Batch ZIP download.',
+    status: 'soon',
+    color: '#2980B9',
+  },
+  {
+    href: '/image-to-pdf',
+    icon: '📁',
+    label: 'Images → PDF',
+    description: 'Combine JPG, PNG, WebP images into one PDF. A4, Letter, or fit-to-image page sizes.',
+    status: 'soon',
+    color: '#F39C12',
+  },
+  {
+    href: '/invoice',
+    icon: '🧾',
+    label: 'Invoice Generator',
+    description: 'Create professional PDF invoices with line items, tax, and auto-calculated totals.',
+    status: 'soon',
+    color: '#1ABC9C',
+  },
+]
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="px-6 py-10 md:px-10 max-w-6xl mx-auto">
+      {/* Header */}
+      <div className="mb-10">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-10 h-10 bg-[#E85D20] rounded-xl flex items-center justify-center font-black text-white text-lg">T</div>
+          <h1 className="text-3xl font-black tracking-tight text-white">TOOLBOX</h1>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <p className="text-[#666] text-sm max-w-lg leading-relaxed">
+          A personal browser-based toolkit for graphic designers. All processing happens in your browser — files never leave your machine.
+        </p>
+      </div>
+
+      {/* Tool grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+        {tools.map((tool) => (
+          <Link
+            key={tool.href}
+            href={tool.href}
+            className="group relative bg-[#111111] border border-[#2A2A2A] rounded-xl p-5 hover:border-[#3A3A3A] hover:bg-[#161616] transition-all duration-200 cursor-pointer"
+          >
+            {/* Status badge */}
+            {tool.status === 'soon' && (
+              <span className="absolute top-4 right-4 text-[10px] font-medium px-2 py-0.5 rounded-full bg-[#222] text-[#555] border border-[#333]">
+                Soon
+              </span>
+            )}
+
+            {/* Icon */}
+            <div
+              className="w-11 h-11 rounded-xl flex items-center justify-center text-xl mb-4 transition-transform group-hover:scale-110"
+              style={{ backgroundColor: `${tool.color}20` }}
+            >
+              {tool.icon}
+            </div>
+
+            {/* Label */}
+            <h2 className="font-semibold text-[#F0F0F0] text-sm mb-1.5 group-hover:text-white transition-colors">
+              {tool.label}
+            </h2>
+            <p className="text-xs text-[#555] leading-relaxed">{tool.description}</p>
+
+            {/* Arrow on hover */}
+            {tool.status === 'live' && (
+              <div className="mt-4 flex items-center gap-1 text-[#E85D20] text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                Open tool <span>→</span>
+              </div>
+            )}
+          </Link>
+        ))}
+      </div>
+
+      {/* Stats bar */}
+      <div className="mt-10 flex flex-wrap gap-6 text-xs text-[#444]">
+        <span>3 tools available</span>
+        <span>·</span>
+        <span>4 coming soon</span>
+        <span>·</span>
+        <span>100% client-side</span>
+        <span>·</span>
+        <span>No account needed</span>
+      </div>
     </div>
-  );
+  )
 }
