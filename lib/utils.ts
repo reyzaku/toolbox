@@ -22,3 +22,11 @@ export function stripExtension(filename: string): string {
 export function getExtension(filename: string): string {
   return filename.split('.').pop()?.toLowerCase() ?? ''
 }
+
+/** pdf-lib returns Uint8Array<ArrayBufferLike> which TypeScript rejects as BlobPart.
+ *  Copying into a fresh Uint8Array<ArrayBuffer> fixes the type at zero runtime cost. */
+export function pdfBytesToBlob(bytes: Uint8Array): Blob {
+  const copy = new Uint8Array(bytes.byteLength)
+  copy.set(bytes)
+  return new Blob([copy], { type: 'application/pdf' })
+}
