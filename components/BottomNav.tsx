@@ -7,8 +7,8 @@ const tabs = [
   { href: '/', label: 'Home', icon: '⊞' },
   { href: '/image-converter', label: 'Images', icon: '🖼' },
   { href: '/color-palette', label: 'Colors', icon: '🎨' },
-  { href: '/qr-generator', label: 'QR', icon: '▣' },
-  { href: '/pdf-toolkit', label: 'PDF', icon: '📄' },
+  { href: '/video-converter', label: 'Video', icon: '🎞' },
+  { href: '/gif-optimizer', label: 'GIF', icon: '⚡' },
 ]
 
 export default function BottomNav() {
