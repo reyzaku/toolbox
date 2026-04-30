@@ -39,27 +39,40 @@ export default function QrGenerator() {
 
   const content = buildQrContent(mode, text, wifi)
 
+  // Preview always renders at a fixed 256px — layout never shifts
   const renderQr = useCallback(async () => {
     if (!canvasRef.current || !content.trim()) return
     const QRCode = (await import('qrcode')).default
     try {
       await QRCode.toCanvas(canvasRef.current, content, {
-        width: size,
+        width: 256,
         margin: 2,
         color: { dark: fgColor, light: bgColor },
       })
     } catch {
       // invalid content — ignore
     }
-  }, [content, size, fgColor, bgColor])
+  }, [content, fgColor, bgColor])
 
   useEffect(() => { renderQr() }, [renderQr])
 
-  const downloadPng = () => {
-    if (!canvasRef.current) return
-    canvasRef.current.toBlob((blob) => {
-      if (blob) downloadFile(blob, 'qrcode.png')
-    })
+  // Download uses an off-screen canvas at the user-selected size
+  const downloadPng = async () => {
+    if (!content.trim()) return
+    const QRCode = (await import('qrcode')).default
+    const offscreen = document.createElement('canvas')
+    try {
+      await QRCode.toCanvas(offscreen, content, {
+        width: size,
+        margin: 2,
+        color: { dark: fgColor, light: bgColor },
+      })
+      offscreen.toBlob((blob) => {
+        if (blob) downloadFile(blob, 'qrcode.png')
+      })
+    } catch {
+      toast('Failed to generate QR', 'error')
+    }
   }
 
   const downloadSvg = async () => {

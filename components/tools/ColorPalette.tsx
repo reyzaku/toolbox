@@ -12,6 +12,42 @@ interface Color {
   name: string
 }
 
+// Safely extract [r, g, b] from whatever colorthief returns.
+// v3 wraps results in a ColorImpl with .rgb()/.array() methods, but
+// the webpack bundle can strip prototype methods — so we fall back
+// gracefully to plain arrays if the method isn't callable.
+function safeRGB(c: unknown): [number, number, number] {
+  if (c && typeof (c as Record<string, unknown>).rgb === 'function') {
+    const { r, g, b } = (c as { rgb: () => { r: number; g: number; b: number } }).rgb()
+    return [r, g, b]
+  }
+  if (c && typeof (c as Record<string, unknown>).array === 'function') {
+    const arr = (c as { array: () => number[] }).array()
+    return [arr[0], arr[1], arr[2]]
+  }
+  if (Array.isArray(c)) return [c[0], c[1], c[2]]
+  throw new Error('Unknown color format from colorthief')
+}
+
+function rgbToHex(r: number, g: number, b: number): string {
+  return '#' + [r, g, b].map(n => n.toString(16).padStart(2, '0')).join('')
+}
+
+function rgbToHsl(r: number, g: number, b: number) {
+  const r1 = r / 255, g1 = g / 255, b1 = b / 255
+  const max = Math.max(r1, g1, b1), min = Math.min(r1, g1, b1)
+  const l = (max + min) / 2
+  let h = 0, s = 0
+  if (max !== min) {
+    const d = max - min
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+    if (max === r1) h = ((g1 - b1) / d + (g1 < b1 ? 6 : 0)) / 6
+    else if (max === g1) h = ((b1 - r1) / d + 2) / 6
+    else h = ((r1 - g1) / d + 4) / 6
+  }
+  return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) }
+}
+
 export default function ColorPalette() {
   const { toast } = useToast()
   const [imageUrl, setImageUrl] = useState<string | null>(null)
@@ -39,27 +75,30 @@ export default function ColorPalette() {
       imgEl.src = imageUrl
       await new Promise<void>((res) => { imgEl.onload = () => res() })
 
-      // Draw to canvas — avoids any cross-origin quirks
+      // Draw to canvas — avoids any cross-origin quirks with blob URLs
       const canvas = document.createElement('canvas')
       canvas.width = imgEl.naturalWidth
       canvas.height = imgEl.naturalHeight
       const ctx = canvas.getContext('2d')!
       ctx.drawImage(imgEl, 0, 0)
 
-      const palette = await getPalette(canvas as unknown as HTMLImageElement, { colorCount: count })
-      if (!palette) { toast('No colors found', 'error'); return }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const palette = await (getPalette as any)(canvas, { colorCount: count })
+      if (!palette || !palette.length) { toast('No colors found', 'error'); return }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const ntc = (await import('name-that-color')).default as any
       ntc.init()
 
-      const extracted: Color[] = palette.map((c) => {
-        const hexVal: string = c.hex()
-        const rgbVal = c.rgb()
-        const hslVal = c.hsl()
-        let name = hexVal
-        try { name = (ntc.name(hexVal) as [string, string, boolean])[1] } catch { /* ignore */ }
-        return { hex: hexVal, rgb: rgbVal, hsl: hslVal, name }
+      const extracted: Color[] = palette.map((c: unknown) => {
+        // Use safe helpers — works regardless of whether colorthief returns
+        // Color objects with methods or plain [r, g, b] arrays
+        const [r, g, b] = safeRGB(c)
+        const hex = rgbToHex(r, g, b)
+        const hsl = rgbToHsl(r, g, b)
+        let name = hex
+        try { name = (ntc.name(hex) as [string, string, boolean])[1] } catch { /* ignore */ }
+        return { hex, rgb: { r, g, b }, hsl, name }
       })
 
       setColors(extracted)
